@@ -6,7 +6,7 @@
 /*   By: fkuruthl <fkuruthl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/28 19:02:02 by fkuruthl          #+#    #+#             */
-/*   Updated: 2024/01/17 17:10:00 by fkuruthl         ###   ########.fr       */
+/*   Updated: 2024/01/19 14:09:47 by fkuruthl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char	*read_from_fd(int fd, char *pent_buffer)
 	char	*temp_buff;
 	int		len;
 
-	temp_buff = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	temp_buff = malloc(sizeof(char) * ((size_t)BUFFER_SIZE + 1));
 	if (!temp_buff)
 		return (NULL);
 	len = 1;
@@ -46,6 +46,8 @@ char	*skip_duplicate(char *pent_buffer)
 	i = 0;
 	while (pent_buffer[i] != '\0' && pent_buffer[i] != '\n')
 		i++;
+	if (pent_buffer[i] == '\n')
+		i++;
 	if (pent_buffer[i] == '\0')
 	{
 		free(pent_buffer);
@@ -54,7 +56,6 @@ char	*skip_duplicate(char *pent_buffer)
 	new_buffer = malloc(ft_strlen(pent_buffer) - i + 1);
 	if (!new_buffer)
 		return (NULL);
-	i++;
 	j = 0;
 	while (pent_buffer[i] != '\0')
 		new_buffer[j++] = pent_buffer[i++];
@@ -93,10 +94,10 @@ char	*ft_line(char *str)
 
 char	*get_next_line(int fd)
 {
-	char		*line;
+	char		*final_line;
 	static char	*pent_buffer;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE > 2147483647)
 	{
 		return (0);
 	}
@@ -105,7 +106,7 @@ char	*get_next_line(int fd)
 	{
 		return (NULL);
 	}
-	line = ft_line(pent_buffer);
+	final_line = ft_line(pent_buffer);
 	pent_buffer = skip_duplicate(pent_buffer);
-	return (line);
+	return (final_line);
 }
