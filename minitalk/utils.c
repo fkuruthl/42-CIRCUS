@@ -83,3 +83,4 @@ void	ft_putnbr(int n)
 		ft_putchar(nb + '0');
 	}
 }
+
